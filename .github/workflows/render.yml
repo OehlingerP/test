@@ -18,7 +18,8 @@ jobs:
 
       - name: Install packages
         run: |
-          install.packages(c("googlesheets4","tidyverse", "ggplot2"))
+          install.packages("pak")
+          pak::pak(c("googlesheets4", "tidyverse", "ggplot2"))
         shell: Rscript {0}
 
       - name: Write credentials
