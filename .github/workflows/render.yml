@@ -1,0 +1,37 @@
+name: Render Training Status
+
+on:
+  schedule:
+    - cron: '0 4 * * *'   # 04:00 UTC = 05:00 CET
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: r-lib/actions/setup-r@v2
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Install packages
+        run: |
+          install.packages(c("googlesheets4","tidyverse", "ggplot2"))
+        shell: Rscript {0}
+
+      - name: Write credentials
+        run: echo '${{ secrets.GSHEET_AUTH }}' > gs.json
+
+      - name: Render
+        run: |
+          Sys.setenv(GOOGLE_APPLICATION_CREDENTIALS="gs.json")
+          system("quarto render")
+        shell: Rscript {0}
+
+      - name: Deploy to Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: _site
+          github_token: ${{ secrets.GITHUB_TOKEN }}
