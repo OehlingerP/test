@@ -18,7 +18,7 @@ jobs:
 
       - name: Install packages
         run: |
-          install.packages(c("googlesheets4","tidyverse", "ggplot2), repos = "https://cloud.r-project.org", dependencies = TRUE)
+          install.packages(c("googlesheets4","tidyverse", "ggplot2"), repos = "https://cloud.r-project.org", dependencies = TRUE)
         shell: Rscript {0}
 
       - name: Write credentials
