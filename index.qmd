@@ -1,0 +1,287 @@
+---
+title: "Training Status"
+execute:
+  echo: false
+  message: false
+  warning: false
+format: 
+  html:
+    toc: true
+editor: visual
+---
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+library(googlesheets4)
+library(googledrive)
+
+# load functions
+invisible(lapply(list.files("R", full.names = T)[-1], source))
+
+df <- read.csv("data/workouts.csv") %>%
+  mutate(WorkoutWeek = strftime(WorkoutDay, format = "%G-W%V"),
+         WorkoutDay = as.Date(WorkoutDay)) 
+df$WorkoutID <- 1:nrow(df)
+
+df_notes <- extract_workout_notes(gs4_find("Workout Notes")$id) %>%
+  filter(date <= Sys.Date())
+```
+
+```{r}
+current_training_status <- get_training_status(df_notes, Sys.Date())
+
+color <- switch(
+  current_training_status$flag,
+  GRAY   = "#93B7BE",
+  GREEN  = "#3a4f01",
+  YELLOW = "#F49937",
+  RED    = "#800000"
+)
+
+htmltools::div(
+  style = paste0(
+    "display:inline-block;
+     padding:6px 14px;
+     border-radius:20px;
+     font-weight:600;
+     color:white;
+     background-color:", color, ";"
+  ),
+  toupper(current_training_status$title)
+)
+```
+
+### Details
+
+**Duration:** `r current_training_status$duration`
+
+**Reason:** `r current_training_status$reason`
+
+**Action:** `r current_training_status$action`
+
+### Development of Training Status
+
+```{r}
+dates <- unique(df_notes$date)
+
+df_status <- data.frame(date = dates, 
+                        status = NA)
+
+for(i in seq_along(dates)) df_status$status[i] <- 
+  get_training_status(df_notes, dates[i])$flag
+  
+map_vals <- data.frame(status = c("GRAY", "GREEN", "YELLOW", "RED"), 
+                       value = c(0, 20, -10, -50))
+
+df_status <- left_join(df_status, map_vals)
+
+ggplot(df_status, aes(x = date, y = value)) + 
+  geom_line() +
+  geom_point(mapping = aes(color = status), size = 5) +
+  theme(axis.text.y = element_blank()) +
+  theme_minimal() +
+  scale_color_manual(values = c("GREEN" = "#3a4f01", 
+                                "YELLOW" = "#F49937",
+                                "GRAY" = "#93B7BE", 
+                                "RED" = "#800000")) +
+  theme(axis.text.y = element_blank(), 
+        axis.title = element_blank())
+
+```
+
+## Watch Out
+
+```{r}
+vars <- c("Pain Pre", 
+          "Pain During", 
+          "Tightness",
+          "Accumulated fatigue", 
+          "Overall readiness",
+          "Sleep quality last night")
+
+x <- df_notes %>%
+  mutate(days_since = as.numeric(Sys.Date()-date), 
+         name = ifelse(grepl("Tightness", name),
+                           "Tightness",
+                           name)) %>%
+  filter(name %in% vars) %>%
+  group_by(date, days_since, name) %>%
+  summarize(value = max(value_num, na.rm = T)) %>%
+  ungroup()
+
+# create threshold table
+thresholds <- data.frame(
+  name = vars, 
+  yellow_min = c(2.5, 2.5, 5.5, 7.5, -Inf, -Inf), 
+  yellow_max = c(Inf, Inf, Inf, Inf, 3.5, 3.5),
+  green_min = c(0, 0, 0, 0, 3.5, 3.5), 
+  green_max = c(2.5, 2.5, 5.5, 7.5, Inf, Inf),
+  red_min = c(3.5, 3.5, 6.5, Inf, -Inf, -Inf), 
+  red_max = c(Inf, Inf, Inf, Inf, -Inf, -Inf)
+)
+
+
+ggplot(x, aes(x = date, y = value)) +
+  # background yellow zone
+  geom_rect(
+    data = thresholds,
+    aes(xmin = min(x$date), xmax = max(x$date),
+        ymin = yellow_min,
+        ymax = yellow_max),
+    fill = "#F49937",
+    alpha = 0.15,
+    inherit.aes = FALSE
+  ) +
+  # background green zone
+  geom_rect(
+    data = thresholds,
+    aes(xmin = min(x$date), xmax = max(x$date),
+        ymin = green_min,
+        ymax = green_max),
+    fill = "#3a4f01",
+    alpha = 0.15,
+    inherit.aes = FALSE
+  ) +
+  # background red zone
+  geom_rect(
+    data = thresholds,
+    aes(xmin = min(x$date), xmax = max(x$date),
+        ymin = red_min,
+        ymax = red_max),
+    fill = "#800000",
+    alpha = 0.15,
+    inherit.aes = FALSE
+  ) +
+  geom_line() +
+  facet_wrap(.~name) +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, 10), 
+                     expand = c(0, 0),
+                     breaks = seq(0, 10, 2)) +
+  theme(axis.title = element_blank())
+```
+
+## Volume Development
+
+Changed Heart Rate Zones for all types to the same as running to make it comparable on the 12th of February 2026 (calendar week 2026-W07). Also from this day on I will upload strength training separately. I want to keep track of my strength volume. However, strength training won't increase TP fitness (TSS set to 0 manually).
+
+```{r}
+x_type <- df %>%
+  group_by(WorkoutWeek, WorkoutType) %>%
+  summarize(across(c(PlannedDuration, TimeTotalInHours), ~sum(., na.rm = T)), 
+            across(c(HRZone1Minutes:HRZone4Minutes, 
+                     PWRZone1Minutes:PWRZone5Minutes), ~sum(., na.rm = T)/60)) %>%
+  ungroup()
+
+colnames(x_type) <- c("week", 
+                 "type", 
+                 "planned_duration",
+                 "duration", 
+                 paste0("hr_zone_", 1:4),
+                 paste0("power_zone_", 1:5))
+
+
+
+x_type$hr_zone_0 <- x_type$duration - rowSums(x_type[, paste0("hr_zone_", 1:4)])
+x_type$power_zone_0 <- x_type$duration - rowSums(x_type[, paste0("power_zone_", 1:5)])
+```
+
+### Total Weekly Volume By Workout Type
+
+::: panel-tabset
+```{r}
+plot <- x_type %>%
+  group_by(week, type) %>%
+  summarize(value = sum(duration, na.rm = T)) %>%
+  ungroup() %>%
+  ggplot(aes(x = week, y = value, fill = type)) +
+  theme_minimal() +
+  scale_fill_manual(values = gxplot::gx_colors()) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+#### Stacked
+
+```{r}
+plot +
+  geom_col(alpha = 0.5) 
+```
+
+#### Dodge
+
+```{r}
+plot +
+  geom_col(alpha = 0.5, position = "dodge") 
+```
+:::
+
+### Total Weekly Volume By Heart Rate Zone
+
+::: panel-tabset
+```{r}
+x_total <- x_type %>%
+  group_by(week) %>%
+  summarize(across(c(planned_duration:duration,
+                     hr_zone_0, 
+                     hr_zone_1:hr_zone_4), 
+                   ~sum(., na.rm = T))) %>%
+  ungroup() %>%
+  tidyr::pivot_longer(-week)
+
+
+plot <- ggplot(x_total %>% 
+         filter(!name %in% c("planned_duration", "duration")), 
+       aes(x = week, y = value, fill = name)) +
+  theme_minimal() +
+  scale_fill_manual(values = gxplot::gx_colors()) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+#### Stacked
+
+```{r}
+plot + geom_col(alpha = 0.5)
+```
+
+#### Dodge
+
+```{r}
+plot + geom_col(alpha = 0.5, position = "dodge")
+```
+:::
+
+### Goal Volume by Heart Rate Distribution
+
+```{r}
+
+last_week <- tail(sort(unique(df$WorkoutWeek)), 2)[1]
+x_last_week <- x_total %>% 
+  filter(!name %in% c("planned_duration", "duration"),
+         week == last_week) %>%
+  mutate(value = round(value/sum(value)*100, 1))
+
+x_last_week_running <- x_type %>%
+  filter(type == "Run",
+         week == last_week) %>%
+  select(week, hr_zone_0, hr_zone_1:hr_zone_4) %>%
+  tidyr::pivot_longer(-week) %>%
+  mutate(value = round(value/sum(value)*100, 1))
+
+
+data.frame("Zone" = 0:4,
+           "Current HR Thresholds" = c("<125", "125-143", "144-160", "161-177", "178-200"),
+           "Share (in %)" = c(0, 40, 50, 8, 2), 
+           "Share Last Week Total (in %)" = x_last_week$value,
+           "Share Last Week Running (in %)" = x_last_week_running$value,
+           check.names = F) %>%
+  DT::datatable(
+    rownames = FALSE,
+    filter = "none",
+    options = list(
+      dom = "t",        # show only the table
+      paging = FALSE,   # remove pagination
+      ordering = FALSE, # remove column sorting
+      info = FALSE      # remove "Showing x to y of z entries"
+    ))
+```
