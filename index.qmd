@@ -14,7 +14,6 @@ editor: visual
 library(ggplot2)
 library(dplyr)
 library(googlesheets4)
-library(googledrive)
 
 # load functions
 invisible(lapply(list.files("R", full.names = T)[-1], source))
