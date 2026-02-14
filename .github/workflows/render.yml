@@ -18,7 +18,7 @@ jobs:
 
       - name: Install packages
         run: |
-          install.packages(c('googledrive', 'googlesheets4', 'httr', 'ragg', 'rvest', "dplyr", "tidyr", "ggplot2"), repos = "https://cloud.r-project.org", dependencies = TRUE)
+          install.packages(c('httr', 'ragg', "gargle", 'rvest', "dplyr", "tidyr", "ggplot2",'googlesheets4'), repos = "https://cloud.r-project.org", dependencies = TRUE)
         shell: Rscript {0}
 
       - name: Write credentials
