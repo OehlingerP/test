@@ -19,8 +19,8 @@
 #            "Overall readiness", "Sleep quality last night",
 #            "Accumulated fatigue", "Motivation before", "Discipline (rules)",      
 #            "Urge to push beyond plan", "Elevation", "Fueling (total)"),
-#   vars = c("type", "compliance", "deviation", "details", "strain_dur", 
-#            "tight_pre", "tight_dur", "tigh_pos", "area", "side", "pain_pre", 
+#   var_name = c("type", "compliance", "deviation", "details", "strain_dur", 
+#            "tight_pre", "tight_dur", "tight_pos", "area", "side", "pain_pre", 
 #            "pain_dur", "pain_pos", "stride", "downhill", "readiness", 
 #            "sleep", "fatigue", "motivation", "rules", "push", "elevation", 
 #            "fueling"))
