@@ -59,6 +59,8 @@ htmltools::div(
 
 **Reason:** `r current_training_status$reason`
 
+**Active Flags:** `r current_training_status$active_flags`
+
 **Action:** `r current_training_status$action`
 
 ### Development of Training Status
@@ -87,7 +89,8 @@ ggplot(df_status, aes(x = date, y = value)) +
                                 "GRAY" = "#93B7BE", 
                                 "RED" = "#800000")) +
   theme(axis.text.y = element_blank(), 
-        axis.title = element_blank())
+        axis.title = element_blank(), 
+        legend.position = "none")
 
 ```
 
