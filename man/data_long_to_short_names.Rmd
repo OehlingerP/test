@@ -6,7 +6,7 @@
 #' @format A data frame with 23 rows and 2 variables:
 #' \describe{
 #'   \item{name}{Description as in UI}
-#'   \item{var}{Abbreviation of description}
+#'   \item{var_name}{Abbreviation of description}
 #' }
 #' @source Simulated for demonstration purposes
 "long_to_short_names"
