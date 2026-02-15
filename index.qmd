@@ -15,6 +15,8 @@ library(ggplot2)
 library(dplyr)
 library(googlesheets4)
 
+my_colors <- c("#141F52", "#800000", "#F49937", "#93B7BE", "#CCCCFF", "#CEAE2A", "#56666B", "#363001", "#4f0113", "#3a4f01")
+
 # load functions
 invisible(lapply(list.files("R", full.names = T)[-1], source))
 
@@ -196,7 +198,7 @@ plot <- x_type %>%
   ungroup() %>%
   ggplot(aes(x = week, y = value, fill = type)) +
   theme_minimal() +
-  scale_fill_manual(values = gxplot::gx_colors()) +
+  scale_fill_manual(values = my_colors) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 ```
 
@@ -233,7 +235,7 @@ plot <- ggplot(x_total %>%
          filter(!name %in% c("planned_duration", "duration")), 
        aes(x = week, y = value, fill = name)) +
   theme_minimal() +
-  scale_fill_manual(values = gxplot::gx_colors()) +
+  scale_fill_manual(values = my_colors) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 ```
 
