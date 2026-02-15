@@ -5,10 +5,6 @@
 
 get_training_status <- function(x, status_date){
   
-  if (!inherits(x, "google_drive_workout_notes")) {
-    stop("x must be a google_drive_workout_notes object.")
-  }
-  
   x <- x %>%
     filter(date <= status_date) %>%
     mutate(days_since = as.numeric(status_date-date))
@@ -285,72 +281,3 @@ get_training_status <- function(x, status_date){
   }
   
 }
-
-
-
-
-
-
-
-
-
-# # filter for duration
-# x_d1 <- x_num %>% filter(days_since <= 1)
-# x_d2 <- x_num %>% filter(days_since <= 2)
-# x_d3 <- x_num %>% filter(days_since <= 3)
-# x_d4 <- x_num %>% filter(days_since <= 4)
-# x_d5 <- x_num %>% filter(days_since <= 5)
-# 
-# x_d5 <- x_d5 %>%
-#   mutate(
-#     # Reduce Training - Pain
-#     reduce_pain = 
-#       (Pain >= 3 | sum(Tightness >= 6) > 1), 
-#     # Increase Run Volume
-#     increase_run = 
-#       Pain < 2 &
-#       Tightness < 6 &
-#       `Accumulated fatigue` < 5
-#   )
-# 
-# x_d4 <- x_d4 %>%
-#   mutate(
-#     # Increase Cross Volume
-#     increase_cross = 
-#       Pain < 3 &
-#       Tightness < 6 &
-#       `Accumulated fatigue` < 5
-#   )
-# 
-# 
-# x_d3 <- x_d3 %>%
-#   mutate(
-#     # Stop Training
-#     stop = Pain >= 5,
-#     # Stop Training - Persistent Irritation
-#     stop_irr = (Pain >= 4 | 
-#                   sum(Pain > 3) + sum(Tightness > 6) > 1))
-# 
-# x_d2 <- x_d2 %>%
-#   mutate(
-#     # Reduce Training - Fatigue
-#     reduce_fatigue =
-#       `Accumulated fatigue` >= 8 |
-#       `Overall readiness` <= 3, 
-#     # Increase Cross
-#     increase_cross = sum(`Sleep quality last night` <= 3) < 2,
-#     # Increase Run
-#     increase_run = increase_cross
-#   ) 
-# 
-# x_d1 <- x_d1 %>%
-#   mutate(
-#     # Reduce Training - Sleep
-#     reduce_sleep = sum(`Sleep quality last night` <= 3) > 1
-#   )
-# 
-# 
-# # filter for duration
-# x_d3_char <- x_char %>% filter(days_since <= 3)
-# x_d4_char <- x_char %>% filter(days_since <= 4)
-# x_d5_char <- x_char %>% filter(days_since <= 5)

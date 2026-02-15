@@ -98,14 +98,6 @@ extract_workout_notes <- function(id){
                                        names_to = "var_name")
   num_session_w <- x_num_session
   
-  class(num_daily_l)   <- c("google_drive_workout_notes", "daily", "num_long", class(num_daily_l))
-  class(num_daily_w)   <- c("google_drive_workout_notes", "daily", "num_wide", class(num_daily_w))
-  class(num_session_l) <- c("google_drive_workout_notes", "session", "num_long", class(num_session_l))
-  class(num_session_w) <- c("google_drive_workout_notes", "session", "num_wide", class(num_session_w))
-  class(x_char_long)   <- c("google_drive_workout_notes", "chr_long", class(x_char_long))
-  class(x_char_wide)   <- c("google_drive_workout_notes", "chr_wide", class(x_char_wide))
-  class(x)             <- c("google_drive_workout_notes", "raw_data_workout_notes", class(x))
-  
   out <- list(
     "num" = list(
       "daily" = list(
