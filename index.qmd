@@ -20,13 +20,15 @@ my_colors <- c("#141F52", "#800000", "#F49937", "#93B7BE", "#CCCCFF", "#CEAE2A",
 # load functions
 invisible(lapply(list.files("R", full.names = T)[-1], source))
 
+# load data
+source("src/prepare-data.R")
+
 df <- read.csv("data/workouts.csv") %>%
   mutate(WorkoutWeek = strftime(WorkoutDay, format = "%G-W%V"),
          WorkoutDay = as.Date(WorkoutDay)) 
 df$WorkoutID <- 1:nrow(df)
 
-df_notes <- extract_workout_notes(gs4_find("Workout Notes")$id) %>%
-  filter(date <= Sys.Date())
+
 ```
 
 ```{r}
