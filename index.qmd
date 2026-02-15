@@ -21,18 +21,18 @@ my_colors <- c("#141F52", "#800000", "#F49937", "#93B7BE", "#CCCCFF", "#CEAE2A",
 invisible(lapply(list.files("R", full.names = T)[-1], source))
 
 # load data
-source("src/prepare-data.R")
-
 df <- read.csv("data/workouts.csv") %>%
   mutate(WorkoutWeek = strftime(WorkoutDay, format = "%G-W%V"),
          WorkoutDay = as.Date(WorkoutDay)) 
 df$WorkoutID <- 1:nrow(df)
 
+ls_notes <- extract_workout_notes2(gs4_find("Workout Notes")$id)
+
 
 ```
 
 ```{r}
-current_training_status <- get_training_status(df_notes, Sys.Date())
+current_training_status <- get_training_status(ls_notes$raw, Sys.Date())
 
 color <- switch(
   current_training_status$flag,
@@ -68,13 +68,13 @@ htmltools::div(
 ### Development of Training Status
 
 ```{r}
-dates <- unique(df_notes$date)
+dates <- unique(ls_notes$raw$date)
 
 df_status <- data.frame(date = dates, 
                         status = NA)
 
 for(i in seq_along(dates)) df_status$status[i] <- 
-  get_training_status(df_notes, dates[i])$flag
+  get_training_status(ls_notes$raw, dates[i])$flag
   
 map_vals <- data.frame(status = c("GRAY", "GREEN", "YELLOW", "RED"),
                        status_name = c("Baseline", "Increase Volume", "Reduce Volume", "Stop Training"), 
@@ -106,7 +106,7 @@ vars <- c("Pain Pre",
           "Overall readiness",
           "Sleep quality last night")
 
-x <- df_notes %>%
+x <- ls_notes$raw %>%
   mutate(days_since = as.numeric(Sys.Date()-date), 
          name = ifelse(grepl("Tightness", name),
                            "Tightness",
