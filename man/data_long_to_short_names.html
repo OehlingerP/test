@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Training Status</title>
+<title>data_long_to_short_names – Training Status</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,23 +23,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-afa37c5c79185640b9c231024f4fe5ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-afa37c5c79185640b9c231024f4fe5ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -67,181 +67,71 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<link href="site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
-<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-<script src="site_libs/datatables-binding-0.34.0/datatables.js"></script>
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
-<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
-<link href="site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
-<script src="site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
 
 
 </head>
 
-<body class="quarto-light">
+<body class="fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#details" id="toc-details" class="nav-link active" data-scroll-target="#details">Details</a></li>
-  <li><a href="#development-of-training-status" id="toc-development-of-training-status" class="nav-link" data-scroll-target="#development-of-training-status">Development of Training Status</a></li>
-  <li><a href="#watch-out" id="toc-watch-out" class="nav-link" data-scroll-target="#watch-out">Watch Out</a></li>
-  <li><a href="#volume-development" id="toc-volume-development" class="nav-link" data-scroll-target="#volume-development">Volume Development</a>
-  <ul class="collapse">
-  <li><a href="#total-weekly-volume-by-workout-type" id="toc-total-weekly-volume-by-workout-type" class="nav-link" data-scroll-target="#total-weekly-volume-by-workout-type">Total Weekly Volume By Workout Type</a></li>
-  <li><a href="#total-weekly-volume-by-heart-rate-zone" id="toc-total-weekly-volume-by-heart-rate-zone" class="nav-link" data-scroll-target="#total-weekly-volume-by-heart-rate-zone">Total Weekly Volume By Heart Rate Zone</a></li>
-  <li><a href="#goal-volume-by-heart-rate-distribution" id="toc-goal-volume-by-heart-rate-distribution" class="nav-link" data-scroll-target="#goal-volume-by-heart-rate-distribution">Goal Volume by Heart Rate Distribution</a></li>
-  </ul></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Training Status</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<div class="cell">
-<div class="cell-output-display">
-<div style="display:inline-block;
-     padding:6px 14px;
-     border-radius:20px;
-     font-weight:600;
-     color:white;
-     background-color:#F49937;">REDUCE RUNNING VOLUME</div>
-</div>
-</div>
-<section id="details" class="level3">
-<h3 class="anchored" data-anchor-id="details">Details</h3>
-<p><strong>Duration:</strong> Reassess daily.</p>
-<p><strong>Reason:</strong> Smaller Niggles Emerge - First signs of injury. Your system cannot cope with the current load.</p>
-<p><strong>Active Flags:</strong> pain_flag</p>
-<p><strong>Action:</strong> Reduce run volume 30–50%, Remove intensity and downhill, Maintain aerobic load via cycling</p>
+<p>#’ Training Status Long to Short Names #’ #’ A dataset containing short names for each status comment. Which makes #’ programming easier. #’ #’ <span class="citation" data-cites="format">@format</span> A data frame with 23 rows and 2 variables: #’ #’ <span class="citation" data-cites="source">@source</span> Simulated for demonstration purposes “long_to_short_names”</p>
+<section id="df---data.frame" class="level1">
+<h1>df &lt;- data.frame(</h1>
 </section>
-<section id="development-of-training-status" class="level3">
-<h3 class="anchored" data-anchor-id="development-of-training-status">Development of Training Status</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<section id="name-ctype-compliance-reason-for-deviation-details" class="level1">
+<h1>name = c(“Type”, “Compliance”, “Reason for deviation”, “Details”,</h1>
 </section>
-<section id="watch-out" class="level2">
-<h2 class="anchored" data-anchor-id="watch-out">Watch Out</h2>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<section id="strain-during-tightness-pre-tightness-during" class="level1">
+<h1>“Strain During”, “Tightness Pre”, “Tightness During”,</h1>
 </section>
-<section id="volume-development" class="level2">
-<h2 class="anchored" data-anchor-id="volume-development">Volume Development</h2>
-<p>Changed Heart Rate Zones for all types to the same as running to make it comparable on the 12th of February 2026 (calendar week 2026-W07). Also from this day on I will upload strength training separately. I want to keep track of my strength volume. However, strength training won’t increase TP fitness (TSS set to 0 manually).</p>
-<section id="total-weekly-volume-by-workout-type" class="level3">
-<h3 class="anchored" data-anchor-id="total-weekly-volume-by-workout-type">Total Weekly Volume By Workout Type</h3>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Stacked</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Dodge</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+<section id="tightness-post-area-side-pain-pre-pain-during" class="level1">
+<h1>“Tightness Post”, “Area”, “Side”, “Pain Pre”, “Pain During”,</h1>
 </section>
-<section id="total-weekly-volume-by-heart-rate-zone" class="level3">
-<h3 class="anchored" data-anchor-id="total-weekly-volume-by-heart-rate-zone">Total Weekly Volume By Heart Rate Zone</h3>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Stacked</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Dodge</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+<section id="pain-post-stride-changes-downhill-tolerance" class="level1">
+<h1>“Pain Post”, “Stride changes”, “Downhill tolerance”,</h1>
 </section>
-<section id="goal-volume-by-heart-rate-distribution" class="level3">
-<h3 class="anchored" data-anchor-id="goal-volume-by-heart-rate-distribution">Goal Volume by Heart Rate Distribution</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-598f593a7797446a5bd3" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-598f593a7797446a5bd3">{"x":{"filter":"none","vertical":false,"data":[[0,1,2,3,4],["&lt;125","125-143","144-160","161-177","178-200"],[0,40,50,8,2],[22.1,32.8,43.9,1.2,0],[null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Zone<\/th>\n      <th>Current HR Thresholds<\/th>\n      <th>Share (in %)<\/th>\n      <th>Share Last Week Total (in %)<\/th>\n      <th>Share Last Week Running (in %)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","paging":false,"ordering":false,"info":false,"columnDefs":[{"className":"dt-right","targets":[0,2,3,4]},{"name":"Zone","targets":0},{"name":"Current HR Thresholds","targets":1},{"name":"Share (in %)","targets":2},{"name":"Share Last Week Total (in %)","targets":3},{"name":"Share Last Week Running (in %)","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
+<section id="overall-readiness-sleep-quality-last-night" class="level1">
+<h1>“Overall readiness”, “Sleep quality last night”,</h1>
+</section>
+<section id="accumulated-fatigue-motivation-before-discipline-rules" class="level1">
+<h1>“Accumulated fatigue”, “Motivation before”, “Discipline (rules)”,</h1>
+</section>
+<section id="urge-to-push-beyond-plan-elevation-fueling-total" class="level1">
+<h1>“Urge to push beyond plan”, “Elevation”, “Fueling (total)”),</h1>
+</section>
+<section id="vars-ctype-compliance-deviation-details-strain_dur" class="level1">
+<h1>vars = c(“type”, “compliance”, “deviation”, “details”, “strain_dur”,</h1>
+</section>
+<section id="tight_pre-tight_dur-tigh_pos-area-side-pain_pre" class="level1">
+<h1>“tight_pre”, “tight_dur”, “tigh_pos”, “area”, “side”, “pain_pre”,</h1>
+</section>
+<section id="pain_dur-pain_pos-stride-downhill-readiness" class="level1">
+<h1>“pain_dur”, “pain_pos”, “stride”, “downhill”, “readiness”,</h1>
+</section>
+<section id="sleep-fatigue-motivation-rules-push-elevation" class="level1">
+<h1>“sleep”, “fatigue”, “motivation”, “rules”, “push”, “elevation”,</h1>
+</section>
+<section id="fueling" class="level1">
+<h1>“fueling”))</h1>
+</section>
+<section id="section" class="level1">
+<h1></h1>
+</section>
+<section id="saverdsdf-datalong_to_short_names.rds" class="level1">
+<h1>saveRDS(df, “data/long_to_short_names.RDS”)</h1>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

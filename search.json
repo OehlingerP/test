@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "man/data_long_to_short_names.html",
+    "href": "man/data_long_to_short_names.html",
+    "title": "df <- data.frame(",
+    "section": "",
+    "text": "#’ Training Status Long to Short Names #’ #’ A dataset containing short names for each status comment. Which makes #’ programming easier. #’ #’ @format A data frame with 23 rows and 2 variables: #’ #’ @source Simulated for demonstration purposes “long_to_short_names”\n\ndf &lt;- data.frame(\n\n\nname = c(“Type”, “Compliance”, “Reason for deviation”, “Details”,\n\n\n“Strain During”, “Tightness Pre”, “Tightness During”,\n\n\n“Tightness Post”, “Area”, “Side”, “Pain Pre”, “Pain During”,\n\n\n“Pain Post”, “Stride changes”, “Downhill tolerance”,\n\n\n“Overall readiness”, “Sleep quality last night”,\n\n\n“Accumulated fatigue”, “Motivation before”, “Discipline (rules)”,\n\n\n“Urge to push beyond plan”, “Elevation”, “Fueling (total)”),\n\n\nvars = c(“type”, “compliance”, “deviation”, “details”, “strain_dur”,\n\n\n“tight_pre”, “tight_dur”, “tigh_pos”, “area”, “side”, “pain_pre”,\n\n\n“pain_dur”, “pain_pos”, “stride”, “downhill”, “readiness”,\n\n\n“sleep”, “fatigue”, “motivation”, “rules”, “push”, “elevation”,\n\n\n“fueling”))\n\n\n\n\n\nsaveRDS(df, “data/long_to_short_names.RDS”)"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Training Status",
