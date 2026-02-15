@@ -16,10 +16,12 @@ jobs:
 
       - uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Install packages
-        run: |
-          install.packages(c('httr', 'ragg', "gargle", 'rvest', "dplyr", "tidyr", "ggplot2",'googlesheets4'), repos = "https://cloud.r-project.org", dependencies = TRUE)
-        shell: Rscript {0}
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::googlesheets4
+            any::tidyverse
+            any::ggplot2
 
       - name: Write credentials
         run: echo '${{ secrets.GSHEET_AUTH }}' > gs.json
