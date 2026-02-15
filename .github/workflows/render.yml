@@ -22,6 +22,7 @@ jobs:
             any::googlesheets4
             any::tidyverse
             any::ggplot2
+            any::DT
 
       - name: Write credentials
         run: echo '${{ secrets.GSHEET_AUTH }}' > gs.json
