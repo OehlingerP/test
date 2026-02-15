@@ -74,23 +74,23 @@ df_status <- data.frame(date = dates,
 for(i in seq_along(dates)) df_status$status[i] <- 
   get_training_status(df_notes, dates[i])$flag
   
-map_vals <- data.frame(status = c("GRAY", "GREEN", "YELLOW", "RED"), 
+map_vals <- data.frame(status = c("GRAY", "GREEN", "YELLOW", "RED"),
+                       status_name = c("Baseline", "Increase Volume", "Reduce Volume", "Stop Training"), 
                        value = c(0, 20, -10, -50))
 
 df_status <- left_join(df_status, map_vals)
 
 ggplot(df_status, aes(x = date, y = value)) + 
   geom_line() +
-  geom_point(mapping = aes(color = status), size = 5) +
+  geom_point(mapping = aes(color = status_name), size = 5) +
   theme(axis.text.y = element_blank()) +
   theme_minimal() +
-  scale_color_manual(values = c("GREEN" = "#3a4f01", 
-                                "YELLOW" = "#F49937",
-                                "GRAY" = "#93B7BE", 
-                                "RED" = "#800000")) +
+  scale_color_manual(values = c("Increase Volume" = "#3a4f01", 
+                                "Reduce Volume" = "#F49937",
+                                "Baseline" = "#93B7BE", 
+                                "Stop Training" = "#800000")) +
   theme(axis.text.y = element_blank(), 
-        axis.title = element_blank(), 
-        legend.position = "none")
+        axis.title = element_blank())
 
 ```
 
