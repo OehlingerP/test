@@ -78,7 +78,8 @@ extract_workout_notes2 <- function(id){
       tidyr::pivot_wider(names_from = var_name, values_from = value) %>%
       group_by(date) %>%
       mutate(pain_max = max(c(pain_pre, pain_pos, pain_dur)),
-             tight_max = max(c(tight_pre, tight_pos, tight_dur)))
+             tight_max = max(c(tight_pre, tight_pos, tight_dur))) %>%
+      ungroup()
       
   # all vars; only four cols; values stored as char
   x_char_long <- x %>%
@@ -91,19 +92,31 @@ extract_workout_notes2 <- function(id){
   x_char_wide <- x_char_long %>%
     tidyr::pivot_wider(names_from = var_name, values_from = value) 
   
+  # define classes for each data.frame
+  num_daily_l <- tidyr::pivot_longer(x_num_daily, -date, names_to = "var_name")
+  num_daily_w <- x_num_daily
+  num_session_l <- tidyr::pivot_longer(x_num_session, 
+                                       -c(date, session_id),
+                                       names_to = "var_name")
+  num_session_w <- x_num_session
+  
+  class(num_daily_l) <- c("google_drive_workout_notes", "daily", "num_long", class(num_daily_l))
+  class(num_daily_w) <- c("google_drive_workout_notes", "daily", "num_wide", class(num_daily_w))
+  class(num_session_l) <- c("google_drive_workout_notes", "session", "num_long", class(num_session_l))
+  class(num_session_w) <- c("google_drive_workout_notes", "session", "num_wide", class(num_session_w))
+  class(x_char_long) <- c("google_drive_workout_notes", "chr_long", class(x_char_long))
+  class(x_char_wide) <- c("google_drive_workout_notes", "chr_wide", class(x_char_wide))
+  class(x) <- c("google_drive_workout_notes", "raw", class(x))
+  
   out <- list(
     "num" = list(
       "daily" = list(
-        "l" = tidyr::pivot_longer(x_num_daily, 
-                                  -date, 
-                                  names_to = "var_name"),
-        "w" = x_num_daily
+        "l" = num_daily_l,
+        "w" = num_daily_w
       ),
       "session" = list(
-        "l" = tidyr::pivot_longer(x_num_session, 
-                                  -c(date, session_id),
-                                  names_to = "var_name"),
-        "w" = x_num_session
+        "l" = num_session_l,
+        "w" = num_session_w
       )
     ),
     "chr" = list(
@@ -113,10 +126,9 @@ extract_workout_notes2 <- function(id){
     "raw" = x
   )
   
-  
   class(out) <- c("google_drive_workout_notes", class(out))
   
-  return(x)
+  return(out)
   
 }
 

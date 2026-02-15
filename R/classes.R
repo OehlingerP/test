@@ -9,8 +9,8 @@ Condition <- R6Class(
     description = NULL,  # Text description of the factor
     active = TRUE,       # Logical flag to indicate if factor is considered active
     indicators = NULL,   # Names of Indicators this Factor can affect
-    recommendation_fun = NULL,  # Function to compute Recommendation based on data
-    initialize = function(description, indicators, recommendation_fun, active = TRUE) {
+    condition_fun = NULL,  # Function to compute Recommendation based on data
+    initialize = function(description, indicators, condition_fun, active = TRUE) {
       self$description <- description
       self$indicators <- indicators
       self$recommendation_fun <- recommendation_fun
