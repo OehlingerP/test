@@ -116,6 +116,7 @@ prepare_workout_data <- function(id) {
   num_daily <- compute_daily_metrics(num_session_metrics)
   
   list(
+    raw         = raw,
     num_session = num_session_metrics,
     num_daily   = num_daily,
     chr_session = session$chr_session
