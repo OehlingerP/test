@@ -1,0 +1,29 @@
+#' Training Status Long to Short Names
+#'
+#' A dataset containing short names for each status comment. Which makes 
+#'    programming easier.
+#'
+#' @format A data frame with 23 rows and 2 variables:
+#' \describe{
+#'   \item{name}{Description as in UI}
+#'   \item{var}{Abbreviation of description}
+#' }
+#' @source Simulated for demonstration purposes
+"long_to_short_names"
+
+# df <- data.frame(
+#   name = c("Type", "Compliance", "Reason for deviation", "Details",                 
+#            "Strain During", "Tightness Pre", "Tightness During", 
+#            "Tightness Post", "Area", "Side", "Pain Pre", "Pain During",             
+#            "Pain Post", "Stride changes", "Downhill tolerance", 
+#            "Overall readiness", "Sleep quality last night",
+#            "Accumulated fatigue", "Motivation before", "Discipline (rules)",      
+#            "Urge to push beyond plan", "Elevation", "Fueling (total)"),
+#   vars = c("type", "compliance", "deviation", "details", "strain_dur", 
+#            "tight_pre", "tight_dur", "tigh_pos", "area", "side", "pain_pre", 
+#            "pain_dur", "pain_pos", "stride", "downhill", "readiness", 
+#            "sleep", "fatigue", "motivation", "rules", "push", "elevation", 
+#            "fueling"))
+# 
+# saveRDS(df, "data/long_to_short_names.RDS")
+
