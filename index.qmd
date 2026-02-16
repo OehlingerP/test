@@ -26,6 +26,8 @@ df <- read.csv("data/workouts.csv") %>%
          WorkoutDay = as.Date(WorkoutDay)) 
 df$WorkoutID <- 1:nrow(df)
 
+test <- prepare_workout_data(gs4_find("Workout Notes")$id)
+
 df_notes <- extract_workout_notes(gs4_find("Workout Notes")$id)
 ```
 

@@ -37,7 +37,7 @@ build_session_data <- function(raw) {
   
   if(!all(c("value_num", "date", "session_id", 
             "var_name", "value_char", "name") %in% 
-          colnames(raw_long))) stop("Not all columns required provided")
+          colnames(raw))) stop("Not all columns required provided")
   
   num_session <- raw %>%
     filter(!is.na(value_num)) %>%
