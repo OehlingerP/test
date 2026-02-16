@@ -28,27 +28,44 @@
 #' @return A named list containing primary and optional secondary status
 #'   metadata and messages.
 daily_status_result <- function(primary_status,
+                                primary_priority = NULL,
                                 primary_action = NULL,
+                                primary_color  = NULL,
                                 primary_blocks = NULL,
                                 primary_status_message = NULL,
                                 primary_condition_messages = NULL,
                                 secondary_status = NULL,
+                                secondary_priority = NULL, 
                                 secondary_action = NULL,
+                                secondary_color  = NULL,
                                 secondary_blocks = NULL,
                                 secondary_status_message = NULL,
                                 secondary_condition_messages = NULL) {
-  list(
+  out <- list(
     primary_status = primary_status,
+    primary_priority = primary_priority,
     primary_action = primary_action,
+    primary_color  = primary_color,
     primary_blocks = primary_blocks,
     primary_status_message = primary_status_message,
     primary_condition_messages = primary_condition_messages,
     secondary_status = secondary_status,
+    secondary_priority = secondary_priority,
     secondary_action = secondary_action,
+    secondary_color  = secondary_color,
     secondary_blocks = secondary_blocks,
     secondary_status_message = secondary_status_message,
     secondary_condition_messages = secondary_condition_messages
   )
+  
+  # Replace NULLs with a placeholder for consistency
+  out <- lapply(out, function(x) {
+    if (is.null(x) || length(x) == 0) NA  # or list() if you prefer a list placeholder
+    else x
+  })
+  
+  return(out)
+  
 }
 
 #' Calculate the resolved daily training status
@@ -106,12 +123,16 @@ calculate_daily_status <- function(ls_rules, ls_notes){
   }
   
   out <- daily_status_result(primary_status = ordered_status[1],
+                             primary_priority = meta_primary$priority,
                              primary_action = meta_primary$action,
+                             primary_color  = meta_primary$status_color,
                              primary_blocks = meta_primary$blocks,
                              primary_status_message = meta_primary$status_message,
                              primary_condition_messages = sapply(cond_primary, `[[`, "condition_message"),
-                             secondary_status = ifelse(length(ordered_status) > 1, ordered_status[2], NULL),
+                             secondary_status = ifelse(length(ordered_status) > 1, ordered_status[2], NA),
+                             secondary_priority = meta_secondary$priority,
                              secondary_action = meta_secondary$action,
+                             secondary_color  = meta_secondary$status_color,
                              secondary_blocks = meta_secondary$blocks,
                              secondary_status_message = meta_secondary$status_message,
                              secondary_condition_messages = sapply(cond_secondary, `[[`, "condition_message"))

@@ -5,7 +5,8 @@
       "priority": 1,
       "blocks": ["running", "strength", "cross"],
       "allows_warnings": false,
-      "action": "STOP TAINING",
+      "action": "STOP TRAINING",
+      "status_color": "#800000",
       "status_message": "All training is blocked today due to high risk or acute issues.",
       "conditions": [
         
@@ -23,7 +24,7 @@
         {
           "dataset": "num_daily",
           "vars": ["pain_pre", "pain_dur", "pain_pos", "pain_max"],
-          "threshold": 0,
+          "threshold": 9,
           "frequency": 1,
           "lookback_days": 1,
           "comparison": "geq",
@@ -34,7 +35,7 @@
         {
           "dataset": "num_daily",
           "vars": ["readiness"],
-          "threshold": 10,
+          "threshold": 1,
           "frequency": 1,
           "lookback_days": 1,
           "comparison": "leq",
@@ -70,7 +71,8 @@
       "priority": 10,
       "blocks": ["running"],
       "allows_warnings": true,
-      "action": "STOP RUNNING",
+      "action": "NO RUNNING",
+      "status_color": "#800000",
       "status_message": "Running is blocked today; other modalities may still be performed with caution.",
       "conditions": [
         
@@ -181,6 +183,7 @@
       "blocks": [],
       "allows_warnings": true,
       "action": "REDUCE TODAYS VOLUME",
+      "status_color": "#F49937",
       "status_message": "Training volume should be reduced today.",
       "conditions": [
         
@@ -225,6 +228,7 @@
       "blocks": [],
       "allows_warnings": true,
       "action": "EASY TRAINING ONLY",
+      "status_color": "#F49937",
       "status_message": "Only easy/low-intensity training recommended today. Look for some soft surfaces and just enjoy the easy run. Training will become harder soon.",
       "conditions": [
         
@@ -291,6 +295,7 @@
       "blocks": [],
       "allows_warnings": true,
       "action": "CAUTION",
+      "status_color": "#F49937",
       "status_message": "Caution advised. Monitor the development of pain, tightness, fatigue, sleep, and readiness closely over the next couple of days.",
       "conditions": [
 
@@ -390,6 +395,7 @@
       "blocks": [],
       "allows_warnings": true,
       "action": "BASELINE",
+      "status_color": "#3a4f01",
       "status_message": "Everything looks good. Have fun, but don't overdo it and respect your rules.",
       "conditions": []
     }

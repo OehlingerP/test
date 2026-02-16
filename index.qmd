@@ -15,7 +15,8 @@ library(ggplot2)
 library(dplyr)
 library(googlesheets4)
 
-my_colors <- c("#141F52", "#800000", "#F49937", "#93B7BE", "#CCCCFF", "#CEAE2A", "#56666B", "#363001", "#4f0113", "#3a4f01")
+my_colors <- c("#141F52", "#800000", "#F49937", "#93B7BE", "#CCCCFF",
+               "#CEAE2A", "#56666B", "#363001", "#4f0113", "#3a4f01")
 
 # load functions
 invisible(lapply(list.files("R", full.names = T)[-1], source))
@@ -26,21 +27,12 @@ df <- read.csv("data/workouts.csv") %>%
          WorkoutDay = as.Date(WorkoutDay)) 
 df$WorkoutID <- 1:nrow(df)
 
-test <- prepare_workout_data(gs4_find("Workout Notes")$id)
-
-df_notes <- extract_workout_notes(gs4_find("Workout Notes")$id)
+ls_rules_daily <- jsonlite::fromJSON("data/daily_rules.json", simplifyDataFrame = F)$daily
+ls_notes <- prepare_workout_data(gs4_find("Workout Notes")$id)
 ```
 
 ```{r}
-current_training_status <- get_training_status(df_notes, Sys.Date())
-
-color <- switch(
-  current_training_status$flag,
-  GRAY   = "#93B7BE",
-  GREEN  = "#3a4f01",
-  YELLOW = "#F49937",
-  RED    = "#800000"
-)
+current_training_status <- calculate_daily_status(ls_rules_daily, ls_notes)
 
 htmltools::div(
   style = paste0(
@@ -49,48 +41,81 @@ htmltools::div(
      border-radius:20px;
      font-weight:600;
      color:white;
-     background-color:", color, ";"
+     background-color:", current_training_status$primary_color, ";"
   ),
-  toupper(current_training_status$title)
+  toupper(current_training_status$primary_action)
 )
 ```
 
-### Details
+### Details for Today's Training Status
 
-**Duration:** `r current_training_status$duration`
+**Message:** `r current_training_status$primary_status_message`
 
-**Reason:** `r current_training_status$reason`
+**What's the problem:** `r current_training_status$primary_condition_messages`
 
-**Active Flags:** `r current_training_status$active_flags`
+**Which activities are blocked:** `r current_training_status$primary_blocked`
 
-**Action:** `r current_training_status$action`
+### Second Status if Active
+
+```{r}
+htmltools::div(
+  style = paste0(
+    "display:inline-block;
+     padding:6px 14px;
+     border-radius:20px;
+     font-weight:600;
+     color:white;
+     background-color:", current_training_status$secondary_color, ";"
+  ),
+  toupper(current_training_status$secondary_action)
+)
+```
+
+**Message:** `r current_training_status$secondary_status_message`{style="padding: 0px 1px; border-width: 1px; border-style: solid; border-color: rgb(91, 91, 91) !important; border-image: initial; background-color: rgb(71, 71, 71) !important; font-family: Monaco, monospace !important; font-size: 9pt !important;"}
+
+**What's the problem:** `r current_training_status$secondary_condition_messages`{style="padding: 0px 1px; border-width: 1px; border-style: solid; border-color: rgb(91, 91, 91) !important; border-image: initial; background-color: rgb(71, 71, 71) !important; font-family: Monaco, monospace !important; font-size: 9pt !important;"}
+
+**Which activities are blocked:** `r current_training_status$secondary_blocked`{style="padding: 0px 1px; border-width: 1px; border-style: solid; border-color: rgb(91, 91, 91) !important; border-image: initial; background-color: rgb(71, 71, 71) !important; font-family: Monaco, monospace !important; font-size: 9pt !important;"}
 
 ### Development of Training Status
 
 ```{r}
-dates <- unique(df_notes$date)
+dates <- unique(ls_notes$raw$date)
+dates <- dates[dates != min(dates)]
 
-df_status <- data.frame(date = dates, 
-                        status = NA)
+DATE <- max(dates)
 
-for(i in seq_along(dates)) df_status$status[i] <- 
-  get_training_status(df_notes, dates[i])$flag
+ls <- lapply(dates, function(DATE){
+  tmp_notes <- lapply(ls_notes, function(x) x %>% filter(date <= DATE))
+  x <- calculate_daily_status(ls_rules_daily, tmp_notes)
+  sapply(x, function(y) {
+    if (length(y) == 0) return(NA)  # keep empty lists
+    paste(y)       # collapse multiple elements if needed
+  })
+})
+
+# function to make all elements have the same names
+
+df_status <- as.data.frame(do.call(rbind, ls))
+
+df_primary <- cbind("status_type" = "Primary", df_status[, 1:(ncol(df_status)/2)])
+colnames(df_primary) <- gsub("primary_", "", colnames(df_primary))
+df_secondary <- cbind("status_type" = "Secondary", df_status[, (ncol(df_status)/2+1):ncol(df_status)])
+colnames(df_secondary) <- gsub("secondary_", "", colnames(df_secondary))
+
+df_status <- rbind(df_primary, df_secondary)
+
+df_status$date <- dates
   
-map_vals <- data.frame(status = c("GRAY", "GREEN", "YELLOW", "RED"),
-                       status_name = c("Baseline", "Increase Volume", "Reduce Volume", "Stop Training"), 
-                       value = c(0, 20, -10, -50))
-
-df_status <- left_join(df_status, map_vals)
-
-ggplot(df_status, aes(x = date, y = value)) + 
+ggplot(df_status, aes(x = date, y = priority)) + 
   geom_line() +
-  geom_point(mapping = aes(color = status_name), size = 5) +
+  geom_point(mapping = aes(color = status), size = 5) +
+  facet_wrap(.~status_type) +
   theme(axis.text.y = element_blank()) +
   theme_minimal() +
-  scale_color_manual(values = c("Increase Volume" = "#3a4f01", 
-                                "Reduce Volume" = "#F49937",
-                                "Baseline" = "#93B7BE", 
-                                "Stop Training" = "#800000")) +
+  scale_color_manual(
+    values = setNames(df_status$color, 
+                      df_status$status)) %>%
   theme(axis.text.y = element_blank(), 
         axis.title = element_blank())
 
@@ -106,7 +131,7 @@ vars <- c("Pain Pre",
           "Overall readiness",
           "Sleep quality last night")
 
-x <- df_notes %>%
+x <- ls_notes$raw %>%
   mutate(days_since = as.numeric(Sys.Date()-date), 
          name = ifelse(grepl("Tightness", name),
                            "Tightness",
