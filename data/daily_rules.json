@@ -1,0 +1,397 @@
+{
+  "daily_rules": {
+
+    "stop_training": {
+      "priority": 1,
+      "blocks": ["running", "strength", "cross"],
+      "allows_warnings": false,
+      "action": "STOP TAINING",
+      "status_message": "All training is blocked today due to high risk or acute issues.",
+      "conditions": [
+        
+        {
+          "dataset": "chr_session",
+          "vars": ["functional_restriction"],
+          "threshold": "Full (No training)",
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "eq",
+          "type": "char",
+          "condition_message": "Full functional restriction detected. No training possible today."
+        },
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["pain_pre", "pain_dur", "pain_pos", "pain_max"],
+          "threshold": 0,
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Pain levels are too high for running. Think about the long-run."
+        },
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["readiness"],
+          "threshold": 10,
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "leq",
+          "type": "threshold",
+          "condition_message": "Readiness score extremely low. Skip training and recover. Think about the long-run."
+        },
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["sleep"],
+          "threshold": 2,
+          "frequency": 2,
+          "lookback_days": 2,
+          "comparison": "leq",
+          "type": "threshold",
+          "condition_message": "Severe sleep deficit. Training today would risk injury or illness."
+        },
+    
+        {
+          "dataset": "num_daily",
+          "vars": ["fatigue"],
+          "threshold": 9,
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Fatigue is extreme. Complete rest advised."
+        }
+      ]
+    },
+
+    "stop_running": {
+      "priority": 10,
+      "blocks": ["running"],
+      "allows_warnings": true,
+      "action": "STOP RUNNING",
+      "status_message": "Running is blocked today; other modalities may still be performed with caution.",
+      "conditions": [
+        
+        {
+          "dataset": "chr_session",
+          "vars": ["functional_restriction"],
+          "threshold": "None (training without restriction)",
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "neq",
+          "type": "char",
+          "condition_message": "Some functional restriction present."
+        },
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["pain_pre", "pain_dur", "pain_pos", "pain_max"],
+          "threshold": 4,
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Moderate pain detected."
+        },
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["pain_pre", "pain_dur", "pain_pos", "pain_max"],
+          "threshold": 3,
+          "frequency": 2,
+          "lookback_days": 3,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Sustained moderate pain detected."
+        },
+        
+        {
+          "dataset": "num_session",
+          "vars": ["pain_inc_pre_dur", "pain_inc_pre_pos", "pain_inc_dur_pos"],
+          "threshold": 2,
+          "frequency": 2,
+          "lookback_days": 2,
+          "comparison": "geq",
+          "type": "session",
+          "condition_message": "Pain is increasing too much during sessions."
+        },
+        
+        {
+          "dataset": "num_session",
+          "vars": ["pain_day_pre"],
+          "threshold": 2,
+          "frequency": 1,
+          "lookback_days": 2,
+          "comparison": "geq",
+          "type": "change",
+          "condition_message": "Pre-run pain has increased significantly over the last 2 days."
+        },
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["tight_pre", "tight_dur", "tight_pos", "tight_max"],
+          "threshold": 8,
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Muscle tightness is too high. Don't risk an injury."
+        },
+        
+        {
+          "dataset": "chr_session",
+          "vars": ["stride"],
+          "threshold": "None", 
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "neq",
+          "type": "char",
+          "condition_message": "Irregular stride pattern. Running likely to be unsafe."
+        },
+        
+        {
+          "dataset": "chr_session",
+          "vars": ["downhill"],
+          "threshold": "intolerable",
+          "frequency": 1,
+          "lookback_days": 2,
+          "comparison": "eq",
+          "type": "char",
+          "condition_message": "Unable to tolerate downhill. Give your legs time to recover. Switch to low-impact cross-training or give your body a break."
+        },
+        
+        {
+          "dataset": "chr_session",
+          "vars": ["rules"],
+          "threshold": "broken",
+          "frequency": 1,
+          "lookback_days": 3,
+          "comparison": "eq",
+          "type": "char",
+          "condition_message": "Learn to respect your rules. It's all about consistency. For now learn it the hard way: No running for you."
+        }
+        
+      ]
+    },
+
+    "reduce_volume": {
+      "priority": 30,
+      "blocks": [],
+      "allows_warnings": true,
+      "action": "REDUCE TODAYS VOLUME",
+      "status_message": "Training volume should be reduced today.",
+      "conditions": [
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["readiness"],
+          "threshold": 3,
+          "frequency": 2,
+          "lookback_days": 3,
+          "comparison": "leq",
+          "type": "threshold",
+          "condition_message": "Readiness is very low. Reduce volume and come back stronger tomorrow."
+        },
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["sleep"],
+          "threshold": 3,
+          "frequency": 2,
+          "lookback_days": 3,
+          "comparison": "leq",
+          "type": "threshold",
+          "condition_message": "Poor sleep quality over the last 3 nights. Cut back training. Your main training goal for today is to get some quality sleep and be ready tomorrow."
+        },
+    
+        {
+          "dataset": "num_daily",
+          "vars": ["fatigue"],
+          "threshold": 7,
+          "frequency": 2,
+          "lookback_days": 3,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Accumulated fatigue is too high. You've done a lot recently. Take it easy today and give your body time to recover fully."
+        }
+        
+      ]
+    },
+
+    "easy_only": {
+      "priority": 40,
+      "blocks": [],
+      "allows_warnings": true,
+      "action": "EASY TRAINING ONLY",
+      "status_message": "Only easy/low-intensity training recommended today. Look for some soft surfaces and just enjoy the easy run. Training will become harder soon.",
+      "conditions": [
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["pain_pre", "pain_dur", "pain_pos", "pain_max"],
+          "threshold": 2,
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Some pain detected. Take it easy only on grass or soft trails."
+        },
+        
+        {
+          "dataset": "num_session",
+          "vars": ["pain_inc_pre_dur", "pain_inc_pre_pos", "pain_inc_dur_pos"],
+          "threshold": 2,
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "geq",
+          "type": "session",
+          "condition_message": "Pain is increasing during sessions. First, sign of injury. Slow down and let the tissues and bones adapt."
+        },
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["tight_pre", "tight_dur", "tight_pos", "tight_max"],
+          "threshold": 5,
+          "frequency": 2,
+          "lookback_days": 2,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Moderate muscle tightness. Slow down and let the muscles adapt."
+        },
+        
+        {
+          "dataset": "chr_session",
+          "vars": ["downhill"],
+          "threshold": "reduced",
+          "frequency": 1,
+          "lookback_days": 2,
+          "comparison": "eq",
+          "type": "char", 
+          "condition_message": "Downhill tolerance limited. Take it easy only on grass or soft trails."
+        },
+
+        {
+          "dataset": "num_daily",
+          "vars": ["strain_dur"],
+          "threshold": 7,
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Yesterday was really hard. Take it easy today."
+        }
+        
+      ]
+    },
+
+    "caution": {
+      "priority": 50,
+      "blocks": [],
+      "allows_warnings": true,
+      "action": "CAUTION",
+      "status_message": "Caution advised. Monitor the development of pain, tightness, fatigue, sleep, and readiness closely over the next couple of days.",
+      "conditions": [
+
+        {
+          "dataset": "num_daily",
+          "vars": ["strain_dur"],
+          "threshold": 6,
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Yesterday was hard. If you don't feel ready today, take it easy."
+        },
+
+        {
+          "dataset": "num_daily",
+          "vars": ["fatigue"],
+          "threshold": 7,
+          "frequency": 2,
+          "lookback_days": 5,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Fatigue has been high recently. Whatch out and take some rest if needed."
+        },
+
+        {
+          "dataset": "num_daily",
+          "vars": ["fatigue"],
+          "threshold": 3,
+          "frequency": 1,
+          "lookback_days": 4,
+          "comparison": "geq",
+          "type": "change",
+          "condition_message": "Fatigue is accumulating. Whatch out and take some rest if needed."
+        },
+
+        {
+          "dataset": "num_daily",
+          "vars": ["sleep"],
+          "threshold": 4,
+          "frequency": 3,
+          "lookback_days": 7,
+          "comparison": "leq",
+          "type": "threshold",
+          "condition_message": "Sleep hasn't been great lately. Whatch out and try to get some quality sleep. This is now a main training goal."
+        },
+
+        {
+          "dataset": "num_daily",
+          "vars": ["sleep"],
+          "threshold": 3,
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "leq",
+          "type": "threshold",
+          "condition_message": "Sleep wasn't good yesterday. If you don't feel ready move todays session and take it easy or pause."
+        },
+        
+        {
+          "dataset": "num_daily",
+          "vars": ["readiness"],
+          "threshold": 4,
+          "frequency": 2,
+          "lookback_days": 5,
+          "comparison": "leq",
+          "type": "threshold",
+          "condition_message": "Readiness is somewhat low. Why?"
+        },
+
+        {
+          "dataset": "chr_session",
+          "vars": ["push"],
+          "threshold": "Yes",
+          "frequency": 2,
+          "lookback_days": 3,
+          "comparison": "eq",
+          "type": "char",
+          "condition_message": "I know you want to push but trust the plan. You're on a brilliant journey and we need that consistency much more then we need heroic workouts."
+        },
+
+        {
+          "dataset": "chr_session",
+          "vars": ["motivation"],
+          "threshold": "High = Strong drive to train",
+          "frequency": 5,
+          "lookback_days": 7,
+          "comparison": "neq",
+          "type": "char",
+          "condition_message": "Motivation below normal. What's wrong? Think about why you are doing this. All the beautiful runs and at some point on the top of the podium. You can do this! If it persists take some time off and do things you enjoy."
+        }
+
+      ]
+    },
+    
+    "baseline": {
+      "priority": 99,
+      "blocks": [],
+      "allows_warnings": true,
+      "action": "BASELINE",
+      "status_message": "Everything looks good. Have fun, but don't overdo it and respect your rules.",
+      "conditions": []
+    }
+  }
+}

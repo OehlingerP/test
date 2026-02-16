@@ -1,0 +1,37 @@
+{
+  "weekly_rules": {
+    "reduce_volume": {
+      "priority": 1,
+      "logic": "OR",
+      "conditions": [
+        {
+          "dataset": "num_daily",
+          "vars": ["pain_dur"],
+          "threshold": 2,
+          "frequency": 3,
+          "lookback_days": 7,
+          "comparison": "geq",
+          "type": "threshold"
+        }
+      ],
+      "adjustment": -0.2
+    },
+
+    "increase_volume": {
+      "priority": 3,
+      "logic": "AND",
+      "conditions": [
+        {
+          "dataset": "num_daily",
+          "vars": ["pain_dur"],
+          "threshold": 1,
+          "frequency": 7,
+          "lookback_days": 7,
+          "comparison": "leq",
+          "type": "threshold"
+        }
+      ],
+      "adjustment": 0.1
+    }
+  }
+}
