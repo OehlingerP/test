@@ -86,53 +86,10 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>#’ Training Status Long to Short Names #’ #’ A dataset containing short names for each status comment. Which makes #’ programming easier. #’ #’ <span class="citation" data-cites="format">@format</span> A data frame with 23 rows and 2 variables: #’ #’ <span class="citation" data-cites="source">@source</span> Simulated for demonstration purposes “long_to_short_names”</p>
-<section id="df---data.frame" class="level1">
-<h1>df &lt;- data.frame(</h1>
-</section>
-<section id="name-ctype-compliance-reason-for-deviation-details" class="level1">
-<h1>name = c(“Type”, “Compliance”, “Reason for deviation”, “Details”,</h1>
-</section>
-<section id="strain-during-tightness-pre-tightness-during" class="level1">
-<h1>“Strain During”, “Tightness Pre”, “Tightness During”,</h1>
-</section>
-<section id="tightness-post-area-side-pain-pre-pain-during" class="level1">
-<h1>“Tightness Post”, “Area”, “Side”, “Pain Pre”, “Pain During”,</h1>
-</section>
-<section id="pain-post-stride-changes-downhill-tolerance" class="level1">
-<h1>“Pain Post”, “Stride changes”, “Downhill tolerance”,</h1>
-</section>
-<section id="overall-readiness-sleep-quality-last-night" class="level1">
-<h1>“Overall readiness”, “Sleep quality last night”,</h1>
-</section>
-<section id="accumulated-fatigue-motivation-before-discipline-rules" class="level1">
-<h1>“Accumulated fatigue”, “Motivation before”, “Discipline (rules)”,</h1>
-</section>
-<section id="urge-to-push-beyond-plan-elevation-fueling-total" class="level1">
-<h1>“Urge to push beyond plan”, “Elevation”, “Fueling (total)”),</h1>
-</section>
-<section id="var_name-ctype-compliance-deviation-details-strain_dur" class="level1">
-<h1>var_name = c(“type”, “compliance”, “deviation”, “details”, “strain_dur”,</h1>
-</section>
-<section id="tight_pre-tight_dur-tight_pos-area-side-pain_pre" class="level1">
-<h1>“tight_pre”, “tight_dur”, “tight_pos”, “area”, “side”, “pain_pre”,</h1>
-</section>
-<section id="pain_dur-pain_pos-stride-downhill-readiness" class="level1">
-<h1>“pain_dur”, “pain_pos”, “stride”, “downhill”, “readiness”,</h1>
-</section>
-<section id="sleep-fatigue-motivation-rules-push-elevation" class="level1">
-<h1>“sleep”, “fatigue”, “motivation”, “rules”, “push”, “elevation”,</h1>
-</section>
-<section id="fueling" class="level1">
-<h1>“fueling”))</h1>
-</section>
-<section id="section" class="level1">
-<h1></h1>
-</section>
-<section id="saverdsdf-datalong_to_short_names.rds" class="level1">
-<h1>saveRDS(df, “data/long_to_short_names.RDS”)</h1>
+<p>df &lt;- data.frame( name = c(“Type”, “Compliance”, “Reason for deviation”, “Details”, “Strain During”, “Tightness Pre”, “Tightness During”, “Tightness Post”, “Area”, “Side”, “Pain Pre”, “Pain During”, “Pain Post”, “Stride changes”, “Downhill tolerance”, “Overall readiness”, “Sleep quality last night”, “Accumulated fatigue”, “Motivation before”, “Discipline (rules)”, “Urge to push beyond plan”, “Elevation”, “Fueling (total)”, “Pain increase pre to during”, “Pain increase pre to post”, “Pain increase during to post”, “Last pain pre to first pain pre (across days)”, “Max pain”, “Max tightness”, “Functional restriction”), var_name = c(“type”, “compliance”, “deviation”, “details”, “strain_dur”, “tight_pre”, “tight_dur”, “tight_pos”, “area”, “side”, “pain_pre”, “pain_dur”, “pain_pos”, “stride”, “downhill”, “readiness”, “sleep”, “fatigue”, “motivation”, “rules”, “push”, “elevation”, “fueling”, “pain_inc_pre_dur”, “pain_inc_pre_pos”, “pain_inc_dur_pos”, “pain_day_pre”, “pain_max”, “tight_max”, “functional_restriction”))</p>
+<p>saveRDS(df, “data/long_to_short_names.RDS”)</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
