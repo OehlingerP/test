@@ -180,24 +180,26 @@ condition_type_change <- function(x, vars, threshold, frequency, comparison){
 condition_type_session <- function(x, vars, threshold, frequency, comparison){
   
   if(!"session_id" %in% colnames(x)) stop("session_id missing in data")
-  condition_type_threshold(x[, setdiff(colnames(x), "session_id")], threshold, frequency, comparison)
+  
+  condition_type_threshold(x[, setdiff(colnames(x), "session_id")], vars,
+                           threshold, frequency, comparison)
   
 }
 
 #' Checks whether a specific character value (`threshold`) has been recorded
 #'    `frequency` times over the las `lookback_days` days.
 condition_type_char <- function(x, vars, threshold, frequency, comparison){
-  ols <- setdiff(colnames(x), c("date", "session_id"))
+  cols <- setdiff(colnames(x), c("date", "session_id"))
   if(!all(apply(x[, cols], 2, is.character))) stop("Character variables needed for type 'char'")
   
-  counts <- colSums(x[, vars] == threshold, na.rm = T)
-  
   if(comparison == "eq"){
-    active <- counts == frequency
+    counts <- colSums(x[, vars] == threshold, na.rm = T)
   } else {
-    active <- counts != frequency
+    counts <- colSums(x[, vars] != threshold, na.rm = T)
   }
-  active
+  
+  active <- counts >= frequency
+
 } 
 
 #' Calculate readiness to train conditions from daily data.

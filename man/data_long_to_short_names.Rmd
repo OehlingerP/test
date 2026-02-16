@@ -11,19 +11,24 @@
 #' @source Simulated for demonstration purposes
 "long_to_short_names"
 
-# df <- data.frame(
-#   name = c("Type", "Compliance", "Reason for deviation", "Details",                 
-#            "Strain During", "Tightness Pre", "Tightness During", 
-#            "Tightness Post", "Area", "Side", "Pain Pre", "Pain During",             
-#            "Pain Post", "Stride changes", "Downhill tolerance", 
-#            "Overall readiness", "Sleep quality last night",
-#            "Accumulated fatigue", "Motivation before", "Discipline (rules)",      
-#            "Urge to push beyond plan", "Elevation", "Fueling (total)"),
-#   var_name = c("type", "compliance", "deviation", "details", "strain_dur", 
-#            "tight_pre", "tight_dur", "tight_pos", "area", "side", "pain_pre", 
-#            "pain_dur", "pain_pos", "stride", "downhill", "readiness", 
-#            "sleep", "fatigue", "motivation", "rules", "push", "elevation", 
-#            "fueling"))
-# 
-# saveRDS(df, "data/long_to_short_names.RDS")
+df <- data.frame(
+  name = c("Type", "Compliance", "Reason for deviation", "Details",
+           "Strain During", "Tightness Pre", "Tightness During",
+           "Tightness Post", "Area", "Side", "Pain Pre", "Pain During",
+           "Pain Post", "Stride changes", "Downhill tolerance",
+           "Overall readiness", "Sleep quality last night",
+           "Accumulated fatigue", "Motivation before", "Discipline (rules)",
+           "Urge to push beyond plan", "Elevation", "Fueling (total)",
+           "Pain increase pre to during", "Pain increase pre to post",
+           "Pain increase during to post",
+           "Last pain pre to first pain pre (across days)", "Max pain",
+           "Max tightness", "Functional restriction"),
+  var_name = c("type", "compliance", "deviation", "details", "strain_dur",
+           "tight_pre", "tight_dur", "tight_pos", "area", "side", "pain_pre",
+           "pain_dur", "pain_pos", "stride", "downhill", "readiness",
+           "sleep", "fatigue", "motivation", "rules", "push", "elevation",
+           "fueling", "pain_inc_pre_dur", "pain_inc_pre_pos",
+           "pain_inc_dur_pos", "pain_day_pre", "pain_max", "tight_max",
+           "functional_restriction"))
 
+saveRDS(df, "data/long_to_short_names.RDS")
