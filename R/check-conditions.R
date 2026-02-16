@@ -3,27 +3,114 @@ condition_result <- function(active_indicator,
                              threshold = NULL,
                              frequency = NULL,
                              lookback_days = NULL,
-                             direction = NULL,
-                             type = NULL) {
+                             comparison = NULL,
+                             type = NULL,
+                             n_obs_used = NULL, 
+                             start_date = NULL, 
+                             end_date = NULL) {
   list(
     active_indicator = active_indicator,
     threshold = threshold,
     frequency = frequency,
     lookback_days = lookback_days,
-    direction = direction,
-    type = type
+    comparison = comparison,
+    type = type,
+    n_obs_used = n_obs_used, 
+    start_date = start_date,
+    end_date = end_date
   )
 }
 
 #' Condition check input helper
-condition_check_inputs <- function(){
-  if(!is.numeric(threshold) & !all(apply(x, 2, is.character))) stop("threshold must be numeric")
-  if(!is.numeric(frequency) & !is.null(frequency)) stop("frequency must be numeric")
-  if(!is.numeric(lookback_days)) stop("lookback_days must be numeric")
-  if(!direction %in% c("geq", "leq") & !is.null(direction)) stop("direction must be leq or geq")
-  if(!all(vars %in% colnames(x))) stop("All vars must be part of x")
-  if(!type %in% c("threshold", "change", "session", "char")) stop("type must be one of threshold, change, session, char")
+condition_check_inputs <- function(x,
+                                   vars,
+                                   threshold,
+                                   frequency,
+                                   lookback_days,
+                                   comparison,
+                                   type) {
+  
+  # ---- General structure checks ----
+  if (!is.data.frame(x)) {
+    stop("x must be a data.frame")
+  }
+  
+  if (!"date" %in% colnames(x)) {
+    stop("x must contain a 'date' column")
+  }
+  
+  if (!all(vars %in% colnames(x))) {
+    stop("All vars must be present in x")
+  }
+  
+  if (!is.numeric(lookback_days) || 
+      length(lookback_days) != 1 ||
+      !is.integer(lookback_days)) {
+    stop("lookback_days must be a single integer value")
+  }
+  
+  if (!type %in% c("threshold", "change", "session", "char")) {
+    stop("type must be one of: threshold, change, session, char")
+  }
+  
+  # ---- Type-specific requirements ----
+  
+  if (type %in% c("threshold", "session")) {
+    
+    if (is.null(threshold) || 
+        !is.numeric(threshold)  || 
+        length(threshold) != 1) {
+      stop("threshold must be numeric for type 'threshold' or 'session'")
+    }
+    
+    if (is.null(frequency) || 
+        !is.numeric(frequency) || 
+        length(frequency) != 1) {
+      stop("frequency must be numeric for type 'threshold' or 'session'")
+    }
+    
+    if (is.null(direction) || !direction %in% c("geq", "leq")) {
+      stop("direction must be 'geq' or 'leq' for type 'threshold' or 'session'")
+    }
+  }
+  
+  if (type == "change") {
+    
+    if (is.null(threshold) || 
+        !is.numeric(threshold) || 
+        length(threshold) != 1) {
+      stop("threshold must be numeric for type 'change'")
+    }
+    
+    if (!is.null(direction) && !direction %in% c("geq", "leq")) {
+      stop("direction must be 'geq' or 'leq'")
+    }
+    
+    if (length(unique(x$date)) < 2) {
+      stop("x must contain at least two different dates for type 'change'")
+    }
+    
+  }
+  
+  if (type == "char") {
+    
+    if (is.null(threshold) || 
+        !is.character(threshold) || 
+        length(threshold) != 1) {
+      stop("threshold must be character for type 'char'")
+    }
+    
+    if (is.null(frequency) || 
+        !is.numeric(frequency) || 
+        length(frequency) != 1) {
+      stop("frequency must be numeric for type 'char'")
+    }
+  }
+  
+  invisible(TRUE)
 }
+
+
 
 #' Condition date filter helper
 #' @param x data.frame; created by `compute_daily_metrics()`
@@ -43,52 +130,62 @@ condition_date_filter <- function(x, vars, lookback_days){
 
 #' Checks whether a certain indicator has crossed a specific `threshold`, 
 #'    `frequency` times over the last `lookback_days` days.
-type_threshold <- function(x, threshold, frequency){
+condition_type_threshold <- function(x, threshold, frequency, comparison){
   
-  if(direction == "geq"){
-    counts <- colSums(x[, -1] >= threshold, na.rm = T)
+  if(comparison == "geq"){
+    counts <- colSums(x[, vars] >= threshold, na.rm = T)
   } else {
-    counts <- colSums(x[, -1] <= threshold, na.rm = T)
+    counts <- colSums(x[, vars] <= threshold, na.rm = T)
   }
-  active <- names(counts[which(counts >= frequency)])
+  active <- counts >= frequency
   active
   
 }
 
 #' Checks whether a certain indicator has changed by `threshold` compared to 
 #'    `lookback_days` days ago.
-type_change <- function(x, threshold){
+condition_type_change <- function(x, threshold, frequency, comparison){
   
   x <- x %>%
-    tidyr::fill(-date, .direction = "downup") %>%
-    filter(date %in% c(max(x$date), min(x$date)))
+    tidyr::fill(-date, .direction = "downup") 
   
-  change <- unlist(x[2, -1] - x[1, -1])
-  active <- names(change[which(change >= threshold)])
+  first_row <- x[which.min(x$date), vars]
+  last_row <- x[which.min(x$date), vars]
+
+  if(nrow(first_row) != 1) stop("Non-unique start date in x for type 'change'")
+  if(nrow(last_row) != 1) stop("Non-unique end date in x for type 'change'") 
+  
+  if(comparison == "geq"){
+    active <- last_row - first_row >= threshold
+  } else {
+    active <- last_row - first_row <= threshold
+  }
+  
   active
   
 }
 
 #' Checks whether a certain indicator has crossed a specific `threshold`, 
 #'    `frequency` times over the last `lookback_days` days. In contrast to 
-#'    `type_threshold()`, this function looks at workout specific data.
+#'    `condition_type_threshold()`, this function looks at workout specific data.
 #' @details
 #' For example, a frequency of 2 would mean that if the threshold is crossed 2 
 #'    times in the last sessions the indicator would become active. Those 
 #'    sessions could be on the same day (not possible in change threshold)
-type_session <- function(x, threshold, frequency){
+condition_type_session <- function(x, threshold, frequency, comparison){
   
   if(!"session_id" %in% colnames(x)) stop("session_id missing in data")
-  type_threshold(x[, -2])
+  condition_type_threshold(x[, setdiff(colnames(x), "session_id")], threshold, frequency, comparison)
   
 }
 
 #' Checks whether a specific character value (`threshold`) has been recorded
 #'    `frequency` times over the las `lookback_days` days.
-type_char <- function(x){
-  if(!all(apply(x, 2, is.character))) stop("Provide character data")
-  counts <- colSums(x[, -c(1, 2)] == threshold, na.rm = T)
-  active <- names(counts[which(counts >= frequency)])
+condition_type_char <- function(x, threshold, frequency, comparison){
+  ols <- setdiff(colnames(x), c("date", "session_id"))
+  if(!all(apply(x[, cols], 2, is.character))) stop("Character variables needed for type 'char'")
+  counts <- colSums(x[, vars] == threshold, na.rm = T)
+  active <- counts >= frequency
   active
 } 
 
@@ -96,11 +193,11 @@ type_char <- function(x){
 #' @param x data.frame; created by `compute_daily_metrics()`
 #' @param vars char; vars for which to check condition
 #' @param threshold num; numerical threshold to trigger action 
-#'    (larger- or lower-equal; see direction)
+#'    (larger- or lower-equal; see comparison)
 #' @param frequency num; how often the threshold must be reached to trigger
 #'    action
 #' @param lookback_days num; number of days to evaluate (from max date in x)
-#' @param direction char; geq = greater equal (default) or leq = lower equal
+#' @param comparison char; geq = greater equal (default) or leq = lower equal
 #' @param type char; type of check to conduct: threshold, change, session, char
 
 check_condition <- function(x, 
@@ -108,45 +205,53 @@ check_condition <- function(x,
                             threshold, 
                             frequency = NULL, 
                             lookback_days,
-                            direction = NULL, 
+                            comparison = NULL, 
                             type){
   
-  condition_check_inputs()
+  condition_check_inputs(x,
+                         vars,
+                         threshold,
+                         frequency,
+                         lookback_days,
+                         comparison,
+                         type)
   
   x <- condition_date_filter(x, vars, lookback_days)
   
-  if(type == "threshold"){
-    active <- type_threshold(x, threshold, frequency)
-  } else if(type == "change"){
-    active <- type_change(x, threshold)
-  } else if(type == "session"){
-    active <- type_session(x, threshold, frequency)
-  } else {
-    active <- type_char(x, threshold, frequency)
-  }
-
-  list(
-    active_indicator = active,
-    threshold = threshold,
-    frequency = frequency,
-    lookback_days = lookback_days,
-    direction = direction,
-    type = type
+  type_map <- list(
+    threshold = condition_type_threshold,
+    change    = condition_type_change,
+    session   = condition_type_session,
+    char      = condition_type_char
   )
   
+  active <- type_map[[type]](x, threshold, frequency, comparison)
+
+  condition_result(active,
+                   threshold,
+                   frequency,
+                   lookback_days,
+                   comparison,
+                   type,
+                   n_obs_used = nrow(x), 
+                   start_date = min(x$date), 
+                   end_date = max(x$date))
 }
 
-vars = c("stride")
-threshold = "None" 
-frequency = 3
-lookback_days = 2 
-type = "char"
 
-check_condition(x, 
-                vars = c("pain_pre", "pain_pos", "pain_dur", "tight_pre"), 
-                threshold = 2, 
-                frequency = 1, 
-                lookback_days = 3, 
-                direction = "geq",
-                type = "threshold")
+x <- test$num_daily
+
+vars = c("pain_pre", "pain_pos")
+threshold = 1
+frequency = 1
+lookback_days = 3
+type = "change"
+# 
+# check_condition(x, 
+#                 vars = c("pain_pre", "pain_pos", "pain_dur", "tight_pre"), 
+#                 threshold = 2, 
+#                 frequency = 1, 
+#                 lookback_days = 3, 
+#                 comparison = "geq",
+#                 type = "threshold")
 
