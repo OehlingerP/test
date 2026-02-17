@@ -181,7 +181,7 @@
     "reduce_volume": {
       "priority": 30,
       "blocks": [],
-      "allows_warnings": true,
+      "allows_warnings": false,
       "action": "REDUCE TODAYS VOLUME",
       "status_color": "#F49937",
       "status_message": "Training volume should be reduced today.",
@@ -226,7 +226,7 @@
     "easy_only": {
       "priority": 40,
       "blocks": [],
-      "allows_warnings": true,
+      "allows_warnings": false,
       "action": "EASY TRAINING ONLY",
       "status_color": "#F49937",
       "status_message": "Only easy/low-intensity training recommended today. Look for some soft surfaces and just enjoy the easy run. Training will become harder soon.",
@@ -293,7 +293,7 @@
     "caution": {
       "priority": 50,
       "blocks": [],
-      "allows_warnings": true,
+      "allows_warnings": false,
       "action": "CAUTION",
       "status_color": "#F49937",
       "status_message": "Caution advised. Monitor the development of pain, tightness, fatigue, sleep, and readiness closely over the next couple of days.",
@@ -387,6 +387,27 @@
           "condition_message": "Motivation below normal. What's wrong? Think about why you are doing this. All the beautiful runs and at some point on the top of the podium. You can do this! If it persists take some time off and do things you enjoy."
         }
 
+      ]
+    },
+    
+    "no_running_baseline": {
+      "priority": 98,
+      "blocks": [],
+      "allows_warnings": true,
+      "action": "NO RUNNING BASELINE",
+      "status_color": "#3a4f01",
+      "status_message": "Take care of your injury. Don't start to early and don't overdo it. Follow your injury protocol. But also see the good things, right now everything else feels all right and you can cross-tran.",
+      "conditions": [
+        {
+          "dataset": "chr_session",
+          "vars": ["functional_restriction"],
+          "threshold": "None (training without restriction)",
+          "frequency": 1,
+          "lookback_days": 1,
+          "comparison": "neq",
+          "type": "char",
+          "condition_message": "Some functional restriction present. But you are ready to cross train (as far as the injury allows)."
+        }
       ]
     },
     

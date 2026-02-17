@@ -53,7 +53,7 @@ htmltools::div(
 
 **What's the problem:** `r current_training_status$primary_condition_messages`
 
-**Which activities are blocked:** `r current_training_status$primary_blocked`
+**Which activities are blocked:** `r current_training_status$primary_blocks`
 
 ### Second Status if Active
 
@@ -71,11 +71,13 @@ htmltools::div(
 )
 ```
 
+#### Details of the Second Status
+
 **Message:** `r current_training_status$secondary_status_message`{style="padding: 0px 1px; border-width: 1px; border-style: solid; border-color: rgb(91, 91, 91) !important; border-image: initial; background-color: rgb(71, 71, 71) !important; font-family: Monaco, monospace !important; font-size: 9pt !important;"}
 
-**What's the problem:** `r current_training_status$secondary_condition_messages`{style="padding: 0px 1px; border-width: 1px; border-style: solid; border-color: rgb(91, 91, 91) !important; border-image: initial; background-color: rgb(71, 71, 71) !important; font-family: Monaco, monospace !important; font-size: 9pt !important;"}
+**What's the problem:** `r paste(current_training_status$secondary_condition_messages)`{style="padding: 0px 1px; border-width: 1px; border-style: solid; border-color: rgb(91, 91, 91) !important; border-image: initial; background-color: rgb(71, 71, 71) !important; font-family: Monaco, monospace !important; font-size: 9pt !important;"}
 
-**Which activities are blocked:** `r current_training_status$secondary_blocked`{style="padding: 0px 1px; border-width: 1px; border-style: solid; border-color: rgb(91, 91, 91) !important; border-image: initial; background-color: rgb(71, 71, 71) !important; font-family: Monaco, monospace !important; font-size: 9pt !important;"}
+**Which activities are blocked:** `r current_training_status$secondary_blocks`{style="padding: 0px 1px; border-width: 1px; border-style: solid; border-color: rgb(91, 91, 91) !important; border-image: initial; background-color: rgb(71, 71, 71) !important; font-family: Monaco, monospace !important; font-size: 9pt !important;"}
 
 ### Development of Training Status
 
