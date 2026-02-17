@@ -108,8 +108,8 @@ colnames(df_secondary) <- gsub("secondary_", "", colnames(df_secondary))
 df_status <- rbind(df_primary, df_secondary)
 
 df_status$date <- dates
-  
-ggplot(df_status, aes(x = date, y = priority)) + 
+
+ggplot(df_status, aes(x = date, y = as.numeric(priority))) + 
   geom_line() +
   geom_point(mapping = aes(color = status), size = 5) +
   facet_wrap(.~status_type) +
