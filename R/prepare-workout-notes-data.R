@@ -23,7 +23,7 @@ extract_workout_notes <- function(id) {
            scale_desc = ifelse(!is.na(value_num), gsub("*. = ", "", value), NA), 
            value_char = ifelse(is.na(value_num), value, as.character(value_num)), 
            date = as.Date(gsub("\\.*", "", date))) %>%
-    filter(date <= Sys.Date())  %>%
+    filter(date < Sys.Date())  %>%
     left_join(jsonlite::fromJSON("data/long-to-short-names.json", simplifyDataFrame = T))
   
   out
