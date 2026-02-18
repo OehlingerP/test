@@ -27,7 +27,7 @@ df <- read.csv("data/workouts.csv") %>%
          WorkoutDay = as.Date(WorkoutDay)) 
 df$WorkoutID <- 1:nrow(df)
 
-ls_rules_daily <- jsonlite::fromJSON("data/daily_rules.json", simplifyDataFrame = F)$daily
+ls_rules_daily <- jsonlite::fromJSON("data/daily-rules.json", simplifyDataFrame = F)$daily
 ls_notes <- prepare_workout_data(gs4_find("Workout Notes")$id)
 ```
 
@@ -87,18 +87,20 @@ dates <- dates[dates != min(dates)]
 
 DATE <- max(dates)
 
-ls <- lapply(dates, function(DATE){
+ls <- sapply(dates, function(DATE) {
   tmp_notes <- lapply(ls_notes, function(x) x %>% filter(date <= DATE))
   x <- calculate_daily_status(ls_rules_daily, tmp_notes)
-  sapply(x, function(y) {
-    if (length(y) == 0) return(NA)  # keep empty lists
-    paste(y)       # collapse multiple elements if needed
-  })
+  
+  vapply(x, function(y) {
+    if (length(y) == 0) {
+      NA_character_
+    } else {
+      paste(y, collapse = " | ")
+    }
+  }, character(1))
 })
 
-# function to make all elements have the same names
-
-df_status <- as.data.frame(do.call(rbind, ls))
+df_status <- as.data.frame(t(ls))
 
 df_primary <- cbind("status_type" = "Primary", df_status[, 1:(ncol(df_status)/2)])
 colnames(df_primary) <- gsub("primary_", "", colnames(df_primary))
@@ -111,13 +113,13 @@ df_status$date <- dates
 
 ggplot(df_status, aes(x = date, y = as.numeric(priority))) + 
   geom_line() +
-  geom_point(mapping = aes(color = status), size = 5) +
+  geom_point(mapping = aes(color = action), size = 5) +
   facet_wrap(.~status_type) +
   theme(axis.text.y = element_blank()) +
   theme_minimal() +
   scale_color_manual(
     values = setNames(df_status$color, 
-                      df_status$status)) %>%
+                      df_status$action)) %>%
   theme(axis.text.y = element_blank(), 
         axis.title = element_blank())
 

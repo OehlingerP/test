@@ -24,7 +24,7 @@ extract_workout_notes <- function(id) {
            value_char = ifelse(is.na(value_num), value, as.character(value_num)), 
            date = as.Date(gsub("\\.*", "", date))) %>%
     filter(date <= Sys.Date())  %>%
-    left_join(readRDS("data/long_to_short_names.RDS"))
+    left_join(jsonlite::fromJSON("data/long-to-short-names.json", simplifyDataFrame = T))
   
   out
 }
