@@ -235,7 +235,7 @@
         {
           "dataset": "num_daily",
           "vars": ["pain_pre", "pain_dur", "pain_pos", "pain_max"],
-          "threshold": 2,
+          "threshold": 4,
           "frequency": 1,
           "lookback_days": 1,
           "comparison": "geq",
@@ -298,6 +298,17 @@
       "status_color": "#F49937",
       "status_message": "Caution advised. Monitor the development of pain, tightness, fatigue, sleep, and readiness closely over the next couple of days.",
       "conditions": [
+
+         {
+          "dataset": "num_daily",
+          "vars": ["pain_pre", "pain_dur", "pain_pos", "pain_max"],
+          "threshold": 3,
+          "frequency": 3,
+          "lookback_days": 5,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Mild pain in three sessions over the last 5 days. Think about pain-free alternatives."
+        },
 
         {
           "dataset": "num_daily",
