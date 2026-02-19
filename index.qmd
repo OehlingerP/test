@@ -29,6 +29,7 @@ df$WorkoutID <- 1:nrow(df)
 
 ls_rules_daily <- jsonlite::fromJSON("data/daily-rules.json", simplifyDataFrame = F)$daily
 ls_notes <- prepare_workout_data(gs4_find("Workout Notes")$id)
+ls_notes <- lapply(ls_notes, function(x) x %>% filter(date < Sys.Date()))
 ```
 
 ```{r}
@@ -83,12 +84,11 @@ htmltools::div(
 
 ```{r}
 dates <- unique(ls_notes$raw$date)
-dates <- dates[dates != min(dates)]
-
-DATE <- max(dates)
+dates <- dates[dates > min(dates) + 1]
 
 ls <- sapply(dates, function(DATE) {
-  tmp_notes <- lapply(ls_notes, function(x) x %>% filter(date <= DATE))
+  print(DATE)
+  tmp_notes <- lapply(ls_notes, function(x) x %>% filter(date < DATE))
   x <- calculate_daily_status(ls_rules_daily, tmp_notes)
   
   vapply(x, function(y) {

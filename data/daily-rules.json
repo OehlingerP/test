@@ -15,7 +15,7 @@
           "vars": ["functional_restriction"],
           "threshold": "Full (No training)",
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "eq",
           "type": "char",
           "condition_message": "Full functional restriction detected. No training possible today."
@@ -26,7 +26,7 @@
           "vars": ["pain_pre", "pain_dur", "pain_pos", "pain_max"],
           "threshold": 9,
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "geq",
           "type": "threshold",
           "condition_message": "Pain levels are too high for running. Think about the long-run."
@@ -37,7 +37,7 @@
           "vars": ["readiness"],
           "threshold": 1,
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "leq",
           "type": "threshold",
           "condition_message": "Readiness score extremely low. Skip training and recover. Think about the long-run."
@@ -59,7 +59,7 @@
           "vars": ["fatigue"],
           "threshold": 9,
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "geq",
           "type": "threshold",
           "condition_message": "Fatigue is extreme. Complete rest advised."
@@ -79,9 +79,9 @@
         {
           "dataset": "chr_session",
           "vars": ["functional_restriction"],
-          "threshold": "None (training without restriction)",
+          "threshold": ["None (training without restriction)", "Re-Introduce Running (Coming Back from Injury)"],
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "neq",
           "type": "char",
           "condition_message": "Some functional restriction present."
@@ -92,7 +92,7 @@
           "vars": ["pain_pre", "pain_dur", "pain_pos", "pain_max"],
           "threshold": 4,
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "geq",
           "type": "threshold",
           "condition_message": "Moderate pain detected."
@@ -136,7 +136,7 @@
           "vars": ["tight_pre", "tight_dur", "tight_pos", "tight_max"],
           "threshold": 8,
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "geq",
           "type": "threshold",
           "condition_message": "Muscle tightness is too high. Don't risk an injury."
@@ -147,7 +147,7 @@
           "vars": ["stride"],
           "threshold": "None", 
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "neq",
           "type": "char",
           "condition_message": "Irregular stride pattern. Running likely to be unsafe."
@@ -176,6 +176,28 @@
         }
         
       ]
+    },
+
+    "re_introduce_running": {
+      "priority": 20,
+      "blocks": [],
+      "allows_warnings": true,
+      "action": "RE-INTRODUCE RUNNING",
+      "status_color": "#F49937",
+      "status_message": "Gradually increase running. Follow back-from-injury protocol: 1 day on 1 day off for 4 days than two times 2 days on 1 day off. Start with run/walk workouts and stop immediately if pain increases during exercise. Even if only a bit.",
+      "conditions": [
+        
+        {
+          "dataset": "chr_session",
+          "vars": ["functional_restriction"],
+          "threshold": "Re-Introduce Running (Coming Back from Injury)",
+          "frequency": 1,
+          "lookback_days": 0,
+          "comparison": "eq",
+          "type": "char",
+          "condition_message": "Some functional restriction present."
+        }
+        ]
     },
 
     "reduce_volume": {
@@ -237,7 +259,7 @@
           "vars": ["pain_pre", "pain_dur", "pain_pos", "pain_max"],
           "threshold": 4,
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "geq",
           "type": "threshold",
           "condition_message": "Some pain detected. Take it easy only on grass or soft trails."
@@ -248,7 +270,7 @@
           "vars": ["pain_inc_pre_dur", "pain_inc_pre_pos", "pain_inc_dur_pos"],
           "threshold": 2,
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "geq",
           "type": "session",
           "condition_message": "Pain is increasing during sessions. First, sign of injury. Slow down and let the tissues and bones adapt."
@@ -281,7 +303,7 @@
           "vars": ["strain_dur"],
           "threshold": 7,
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "geq",
           "type": "threshold",
           "condition_message": "Yesterday was really hard. Take it easy today."
@@ -315,7 +337,7 @@
           "vars": ["strain_dur"],
           "threshold": 6,
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "geq",
           "type": "threshold",
           "condition_message": "Yesterday was hard. If you don't feel ready today, take it easy."
@@ -359,7 +381,7 @@
           "vars": ["sleep"],
           "threshold": 3,
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "leq",
           "type": "threshold",
           "condition_message": "Sleep wasn't good yesterday. If you don't feel ready move todays session and take it easy or pause."
@@ -384,7 +406,7 @@
           "lookback_days": 3,
           "comparison": "eq",
           "type": "char",
-          "condition_message": "I know you want to push but trust the plan. You're on a brilliant journey and we need that consistency much more then we need heroic workouts."
+          "condition_message": "Urge to push is getting to you. I know you want to push but trust the plan. You're on a brilliant journey and we need that consistency much more then we need heroic workouts."
         },
 
         {
@@ -405,7 +427,7 @@
       "priority": 98,
       "blocks": [],
       "allows_warnings": true,
-      "action": "NO RUNNING BASELINE",
+      "action": "BASELINE - FOR RUNNING CURRENTLY NOT POSSIBLE",
       "status_color": "#3a4f01",
       "status_message": "Take care of your injury. Don't start to early and don't overdo it. Follow your injury protocol. But also see the good things, right now everything else feels all right and you can cross-tran.",
       "conditions": [
@@ -414,7 +436,7 @@
           "vars": ["functional_restriction"],
           "threshold": "None (training without restriction)",
           "frequency": 1,
-          "lookback_days": 1,
+          "lookback_days": 0,
           "comparison": "neq",
           "type": "char",
           "condition_message": "Some functional restriction present. But you are ready to cross train (as far as the injury allows)."

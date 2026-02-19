@@ -95,8 +95,7 @@ condition_check_inputs <- function(x,
   if (type == "char") {
     
     if (is.null(threshold) || 
-        !is.character(threshold) || 
-        length(threshold) != 1) {
+        !is.character(threshold)) {
       stop("threshold must be character for type 'char'")
     }
     
@@ -129,7 +128,7 @@ condition_date_filter <- function(x, vars, lookback_days){
     x <- x[, c("date", vars)] 
   }
   x %>%
-    filter(date >= max(x$date, na.rm = TRUE) - lookback_days) %>%
+    filter(date >= max(date, na.rm = T) - lookback_days) %>%
     arrange(date)
 }
 
@@ -193,9 +192,9 @@ condition_type_char <- function(x, vars, threshold, frequency, comparison){
   if(!all(apply(x[, cols], 2, is.character))) stop("Character variables needed for type 'char'")
   
   if(comparison == "eq"){
-    counts <- colSums(x[, vars] == threshold, na.rm = T)
+    counts <- colSums(as.data.frame(apply(x[, vars, drop = F], 2, function(x) x %in% threshold, simplify = F)), na.rm = T)
   } else {
-    counts <- colSums(x[, vars] != threshold, na.rm = T)
+    counts <- colSums(as.data.frame(apply(x[, vars, drop = F], 2, function(x) !x %in% threshold, simplify = F)), na.rm = T)
   }
   
   active <- counts >= frequency

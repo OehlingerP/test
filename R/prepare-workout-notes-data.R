@@ -1,5 +1,5 @@
 #' Function to extract athlete comments from Google Drive Workout Notes Sheet 
-#' @param id char; id of Google Drive sheet 
+#' @param id char; id of Google Drive sheet
 
 extract_workout_notes <- function(id) {
   
