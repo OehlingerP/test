@@ -194,7 +194,7 @@ condition_type_char <- function(x, vars, threshold, frequency, comparison){
   if(comparison == "eq"){
     counts <- colSums(as.data.frame(apply(x[, vars, drop = F], 2, function(x) x %in% threshold, simplify = F)), na.rm = T)
   } else {
-    counts <- colSums(as.data.frame(apply(x[, vars, drop = F], 2, function(x) !x %in% threshold, simplify = F)), na.rm = T)
+    counts <- colSums(as.data.frame(apply(x[, vars, drop = F], 2, function(x) !x %in% c(threshold, NA), simplify = F)), na.rm = T)
   }
   
   active <- counts >= frequency

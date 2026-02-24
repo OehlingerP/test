@@ -83,11 +83,12 @@ htmltools::div(
 ### Development of Training Status
 
 ```{r}
+all_notes <- ls_notes
+
 dates <- unique(ls_notes$raw$date)
 dates <- dates[dates > min(dates) + 1]
 
 ls <- sapply(dates, function(DATE) {
-  print(DATE)
   tmp_notes <- lapply(ls_notes, function(x) x %>% filter(date < DATE))
   x <- calculate_daily_status(ls_rules_daily, tmp_notes)
   
@@ -111,17 +112,22 @@ df_status <- rbind(df_primary, df_secondary)
 
 df_status$date <- dates
 
+df_colors <- df_status %>%
+  select(action, color) %>%
+  unique() 
+
 ggplot(df_status, aes(x = date, y = as.numeric(priority))) + 
   geom_line() +
-  geom_point(mapping = aes(color = action), size = 5) +
+  geom_point(mapping = aes(color = action, shape = action), size = 5) +
   facet_wrap(.~status_type) +
   theme(axis.text.y = element_blank()) +
   theme_minimal() +
   scale_color_manual(
-    values = setNames(df_status$color, 
-                      df_status$action)) %>%
+    values = setNames(df_colors$color, 
+                      df_colors$action)) +
   theme(axis.text.y = element_blank(), 
-        axis.title = element_blank())
+        axis.title = element_blank(), 
+        legend.position = "bottom")
 
 ```
 
