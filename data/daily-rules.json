@@ -240,6 +240,16 @@
           "comparison": "geq",
           "type": "threshold",
           "condition_message": "Accumulated fatigue is too high. You've done a lot recently. Take it easy today and give your body time to recover fully."
+        },
+        {
+          "dataset": "num_daily",
+          "vars": ["fatigue"],
+          "threshold": 5,
+          "frequency": 3,
+          "lookback_days": 5,
+          "comparison": "geq",
+          "type": "threshold",
+          "condition_message": "Accumulated fatigue is too high. You've done a lot recently. Take it easy today and give your body time to recover fully."
         }
         
       ]

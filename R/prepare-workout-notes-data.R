@@ -3,22 +3,29 @@
 
 extract_workout_notes <- function(id) {
   
-  raw <- read_sheet(id) %>%
+  raw_workouts <- read_sheet(id, sheet = "Workouts") %>%
     mutate(across(everything(), as.character))
   
-  df_dates <- raw %>%
+  df_dates_workouts <- raw_workouts %>%
     filter(name == "Session Number") %>%
     tidyr::pivot_longer(-name, names_to = "date") %>%
     select(date, value) %>%
     rename("session_id" = value)
   
-  df_values <- raw %>%
+  df_values_workouts <- raw_workouts %>%
     filter(name != "Session Number") %>%
     tidyr::pivot_longer(-name, names_to = "date") %>% 
     mutate(value = ifelse(value %in% c("NULL", "NA"), NA, value))
   
-  out <- df_dates %>%
-    left_join(df_values) %>%
+  raw_condition <- read_sheet(id, sheet = "Condition") %>%
+    mutate(across(everything(), as.character)) %>%
+    tidyr::pivot_longer(-name, names_to = "date") %>%
+    mutate(session_id = 1) %>%
+    select(date, session_id, name, value)
+  
+  out <- df_dates_workouts %>%
+    left_join(df_values_workouts) %>%
+    rbind(raw_condition) %>%
     mutate(value_num = as.numeric(gsub(" = .*", "", value)),
            scale_desc = ifelse(!is.na(value_num), gsub("*. = ", "", value), NA), 
            value_char = ifelse(is.na(value_num), value, as.character(value_num)), 
